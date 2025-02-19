@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}热门歌手 - 音乐推荐系统{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="list-container">
+    <div class="list-header">
+        <div class="header-left">
+            <a href="{% url 'index' %}" class="btn-back">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h2><i class="fas fa-user-friends"></i> 热门歌手</h2>
+        </div>
+    </div>
+    <div class="artist-grid">
+        {% for artist in artists %}
+        <div class="artist-card">
+            <div class="artist-avatar">
+                <img src="{{ artist.avatar }}" alt="{{ artist.name }}">
+            </div>
+            <div class="artist-info">
+                <h4>{{ artist.name }}</h4>
+                <div class="artist-meta">
+                    <span><i class="fas fa-music"></i> {{ artist.songs_count }}首歌</span>
+                    <span><i class="fas fa-users"></i> {{ artist.fans_count }}粉丝</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

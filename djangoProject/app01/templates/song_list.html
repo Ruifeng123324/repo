@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}推荐歌曲 - 音乐推荐系统{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="list-container">
+    <div class="list-header">
+        <div class="header-left">
+            <a href="{% url 'index' %}" class="btn-back">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h2><i class="fas fa-music"></i> 推荐歌曲</h2>
+        </div>
+    </div>
+    <div class="song-table-container">
+        <table class="song-table">
+            <thead>
+                <tr>
+                    <th width="50">#</th>
+                    <th>歌曲</th>
+                    <th>歌手</th>
+                    <th width="100">时长</th>
+                    <th width="100">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for song in songs %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ song.title }}</td>
+                    <td>{{ song.artist }}</td>
+                    <td>{{ song.duration }}</td>
+                    <td>
+                        <button class="btn-action" title="收藏">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <button class="btn-action" title="添加到播放列表">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}热门歌单 - 音乐推荐系统{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="list-container">
+    <div class="list-header">
+        <div class="header-left">
+            <a href="{% url 'index' %}" class="btn-back">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h2><i class="fas fa-list"></i> 热门歌单</h2>
+        </div>
+    </div>
+    <div class="playlist-grid">
+        {% for playlist in playlists %}
+        <div class="playlist-card">
+            <div class="playlist-cover">
+                <img src="{{ playlist.cover }}" alt="{{ playlist.title }}">
+            </div>
+            <div class="playlist-info">
+                <h4>{{ playlist.title }}</h4>
+                <p class="creator">by {{ playlist.creator }}</p>
+                <div class="playlist-meta">
+                    <span><i class="fas fa-play"></i> {{ playlist.play_count }}</span>
+                    <span><i class="fas fa-music"></i> {{ playlist.song_count }}首</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

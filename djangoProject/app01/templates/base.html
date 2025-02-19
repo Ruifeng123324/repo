@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}音乐推荐系统{% endblock %}</title>
+    {% load static %}
+    <!-- 使用本地 jQuery -->
+    <script src="{% static 'jquery3.7/jquery3.71.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'bootstrap-3.4.1/css/bootstrap.min.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="g-topbar">
+        <div class="m-top">
+            <div class="m-top-wrap">
+                <!-- Logo -->
+                <h1 class="logo">
+                    <a href="{% url 'index' %}">音乐推荐</a>
+                </h1>
+                <!-- 主导航 -->
+                <ul class="m-nav">
+                    <li><a href="{% url 'index' %}">发现音乐</a></li>
+                    <li><a href="{% url 'profile' %}">我的音乐</a></li>
+                    <li><a href="#">关注</a></li>
+                </ul>
+                <!-- 搜索框 -->
+                <div class="m-search">
+                    <input type="text" placeholder="音乐/视频/电台/用户">
+                    <i class="fas fa-search"></i>
+                </div>
+                <!-- 用户区域 -->
+                <div class="m-user">
+                    {% if request.session.user_id %}
+                        <div class="user-info">
+                            <a href="{% url 'profile' %}">{{ request.session.username }}</a>
+                            <a href="{% url 'logout' %}">退出</a>
+                        </div>
+                    {% else %}
+                        <div class="user-login">
+                            <a href="{% url 'login' %}">登录</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主体内容区 -->
+    <div class="g-container">
+        {% if request.resolver_match.url_name != 'profile' %}
+        <!-- 侧边栏 - 只在非个人中心页面显示 -->
+        <div class="g-side">
+            <div class="m-side">
+                <ul class="side-menu">
+                    <li><a href="{% url 'song_list' %}"><i class="fas fa-music"></i> 推荐歌曲</a></li>
+                    <li><a href="{% url 'playlist_list' %}"><i class="fas fa-list"></i> 热门歌单</a></li>
+                    <li><a href="{% url 'artist_list' %}"><i class="fas fa-user-friends"></i> 热门歌手</a></li>
+                    {% if request.session.user_id %}
+                    <li><a href="{% url 'admin_dashboard' %}"><i class="fas fa-cog"></i> 管理后台</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- 主内容区 -->
+        <div class="g-main {% if request.resolver_match.url_name == 'profile' %}g-main-full{% endif %}">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <!-- 底部播放器 -->
+    <div class="g-player">
+        <div class="m-player">
+            <div class="player-controls">
+                <a href="#" class="btn-prev"><i class="fas fa-step-backward"></i></a>
+                <a href="#" class="btn-play"><i class="fas fa-play-circle"></i></a>
+                <a href="#" class="btn-next"><i class="fas fa-step-forward"></i></a>
+            </div>
+            <div class="player-progress">
+                <div class="progress">
+                    <div class="progress-bar"></div>
+                </div>
+                <span class="time">00:00 / 00:00</span>
+            </div>
+            <div class="player-options">
+                <a href="#" class="btn-volume"><i class="fas fa-volume-up"></i></a>
+                <a href="#" class="btn-mode"><i class="fas fa-random"></i></a>
+                <a href="#" class="btn-playlist"><i class="fas fa-list"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 使用本地 Bootstrap JS -->
+    <script src="{% static 'bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

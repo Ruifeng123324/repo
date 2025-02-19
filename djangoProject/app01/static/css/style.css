@@ -1,0 +1,294 @@
+/* 自定义样式 */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f5f5;
+    padding-bottom: 80px; /* 为播放器留出空间 */
+}
+
+main {
+    flex: 1;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,.1);
+}
+
+.btn-primary {
+    background-color: #1DB954;
+    border-color: #1DB954;
+}
+
+.btn-primary:hover {
+    background-color: #1ed760;
+    border-color: #1ed760;
+}
+
+/* 全局样式 */
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* 顶部导航栏 */
+.g-topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: #242424;
+    border-bottom: 1px solid #000;
+    z-index: 1000;
+}
+
+.m-top {
+    width: 100%;
+    height: 70px;
+}
+
+.m-top-wrap {
+    width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.logo {
+    margin: 0;
+    padding: 0;
+}
+
+.logo a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 24px;
+    margin-right: 20px;
+}
+
+.m-nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.m-nav li a {
+    color: #ccc;
+    text-decoration: none;
+    padding: 0 20px;
+    font-size: 16px;
+}
+
+.m-nav li a:hover {
+    color: #fff;
+}
+
+.m-search {
+    position: relative;
+    margin-left: auto;
+}
+
+.m-search input {
+    width: 200px;
+    height: 32px;
+    border-radius: 32px;
+    border: none;
+    background: #fff;
+    padding: 0 30px 0 15px;
+}
+
+.m-search i {
+    position: absolute;
+    right: 10px;
+    top: 8px;
+    color: #666;
+}
+
+.m-user {
+    margin-left: 20px;
+}
+
+.m-user a {
+    color: #ccc;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+/* 主体内容区 */
+.g-container {
+    display: flex;
+    margin-top: 70px;
+    min-height: calc(100vh - 140px);
+}
+
+.g-side {
+    width: 200px;
+    background: #f9f9f9;
+    border-right: 1px solid #e1e1e1;
+    padding: 20px 0;
+}
+
+.side-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.side-menu li a {
+    display: block;
+    padding: 12px 25px;
+    color: #333;
+    text-decoration: none;
+}
+
+.side-menu li a:hover {
+    background: #e6e6e6;
+}
+
+.side-menu li a i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.side-title {
+    padding: 10px 25px;
+    color: #999;
+    font-size: 12px;
+    margin-top: 20px;
+}
+
+.g-main {
+    flex: 1;
+    padding: 20px;
+    background: #fff;
+}
+
+/* 底部播放器 */
+.g-player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: #252525;
+    border-top: 1px solid #1d1d1d;
+}
+
+.m-player {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 1100px;
+    margin: 0 auto;
+    height: 100%;
+    color: #fff;
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+}
+
+.player-controls a {
+    color: #fff;
+    font-size: 20px;
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+.btn-play {
+    font-size: 35px !important;
+}
+
+.player-progress {
+    flex: 1;
+    margin: 0 20px;
+}
+
+.progress {
+    height: 2px;
+    background: #666;
+    margin-bottom: 5px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: #c70c0c;
+    width: 30%;
+}
+
+.time {
+    font-size: 12px;
+    color: #999;
+}
+
+.player-options a {
+    color: #fff;
+    margin-left: 20px;
+    text-decoration: none;
+}
+
+/* 音乐播放器样式 */
+.music-player {
+    background: rgba(33, 37, 41, 0.95);
+    color: white;
+    padding: 10px 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+.album-cover {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.song-title {
+    font-size: 14px;
+    margin: 0;
+}
+
+.song-artist {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.player-controls .btn-link {
+    color: white;
+    text-decoration: none;
+}
+
+.player-controls .btn-link:hover {
+    color: #66a6ff;
+}
+
+.player-options .btn-link {
+    color: white;
+    text-decoration: none;
+    padding: 5px;
+}
+
+.player-options .btn-link:hover {
+    color: #66a6ff;
+}
+
+.g-main-full {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px;
+} 

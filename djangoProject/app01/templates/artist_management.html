@@ -1,0 +1,344 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+.artist-container {
+    padding: 30px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.title-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.back-btn {
+    color: #666;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.back-btn:hover {
+    color: #333;
+    text-decoration: none;
+}
+
+.table-responsive {
+    margin-top: 20px;
+}
+
+.action-btns {
+    display: flex;
+    gap: 10px;
+}
+
+/* 添加加载动画样式 */
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-content {
+    background: white;
+    padding: 20px 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background: #333;
+    color: white;
+    border-radius: 4px;
+    display: none;
+    z-index: 9999;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="artist-container">
+    <div class="header-section">
+        <div class="title-section">
+            <a href="{% url 'admin_dashboard' %}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> 返回
+            </a>
+            <h2>歌手管理</h2>
+        </div>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addArtistModal">
+            添加歌手
+        </button>
+    </div>
+    
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>歌手名</th>
+                    <th>简介</th>
+                    <th>热度</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for artist in artists %}
+                <tr>
+                    <td>{{ artist.id }}</td>
+                    <td>{{ artist.name }}</td>
+                    <td>{{ artist.introduction|truncatechars:50 }}</td>
+                    <td>{{ artist.popularity }}</td>
+                    <td>{{ artist.create_time|date:"Y-m-d H:i" }}</td>
+                    <td class="action-btns">
+                        <button class="btn btn-sm btn-info" onclick="editArtist({{ artist.id }})">编辑</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteArtist({{ artist.id }})">删除</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 添加歌手模态框 -->
+<div class="modal fade" id="addArtistModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">添加歌手</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form id="addArtistForm" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>歌手名</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>简介</label>
+                        <textarea name="introduction" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>头像URL</label>
+                        <input type="url" name="avatar" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 在现有模态框后添加编辑歌手模态框 -->
+<div class="modal fade" id="editArtistModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">编辑歌手</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form id="editArtistForm" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="artist_id" id="edit_artist_id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>歌手名</label>
+                        <input type="text" name="name" id="edit_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>简介</label>
+                        <textarea name="introduction" id="edit_introduction" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>头像URL</label>
+                        <input type="url" name="avatar" id="edit_avatar" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>热度</label>
+                        <input type="number" name="popularity" id="edit_popularity" class="form-control" min="0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 添加加载动画 -->
+<div class="loading">
+    <div class="loading-content">
+        <div class="spinner"></div>
+        <span>处理中...</span>
+    </div>
+</div>
+
+<!-- 添加提示框 -->
+<div class="toast"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 显示加载动画
+function showLoading() {
+    document.querySelector('.loading').style.display = 'flex';
+}
+
+// 隐藏加载动画
+function hideLoading() {
+    document.querySelector('.loading').style.display = 'none';
+}
+
+// 显示提示信息
+function showToast(message, type = 'success') {
+    const toast = document.querySelector('.toast');
+    toast.textContent = message;
+    toast.style.background = type === 'success' ? '#28a745' : '#dc3545';
+    toast.style.display = 'block';
+    setTimeout(() => {
+        toast.style.display = 'none';
+    }, 3000);
+}
+
+function editArtist(artistId) {
+    showLoading();
+    fetch(`/management/artists/${artistId}/get/`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('edit_artist_id').value = data.id;
+            document.getElementById('edit_name').value = data.name;
+            document.getElementById('edit_introduction').value = data.introduction;
+            document.getElementById('edit_avatar').value = data.avatar;
+            document.getElementById('edit_popularity').value = data.popularity;
+            $('#editArtistModal').modal('show');
+        })
+        .catch(error => {
+            showToast('获取歌手信息失败', 'error');
+        })
+        .finally(() => {
+            hideLoading();
+        });
+}
+
+function deleteArtist(artistId) {
+    if (confirm('确定要删除这个歌手吗？')) {
+        showLoading();
+        fetch(`/management/artists/${artistId}/delete/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        }).then(response => {
+            if (response.ok) {
+                showToast('歌手已成功删除');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                showToast('删除歌手失败', 'error');
+            }
+        })
+        .catch(error => {
+            showToast('删除歌手失败', 'error');
+        })
+        .finally(() => {
+            hideLoading();
+        });
+    }
+}
+
+// 表单提交处理
+document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        showLoading();
+        
+        fetch(window.location.href, {
+            method: 'POST',
+            body: new FormData(this),
+        })
+        .then(response => response.text())
+        .then(html => {
+            if (html.includes('alert-success')) {
+                showToast('操作成功');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                showToast('操作失败', 'error');
+                document.documentElement.innerHTML = html;
+            }
+        })
+        .catch(error => {
+            showToast('操作失败', 'error');
+        })
+        .finally(() => {
+            hideLoading();
+            $('.modal').modal('hide');
+        });
+    });
+});
+</script>
+{% endblock %} 

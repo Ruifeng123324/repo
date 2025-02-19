@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}首页 - 音乐推荐系统{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <!-- 推荐歌曲 -->
+    <section class="recommend-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-thumbs-up"></i> 推荐歌曲
+            </h2>
+            <a href="{% url 'song_list' %}" class="more-link">
+                更多 <i class="fas fa-chevron-right"></i>
+            </a>
+        </div>
+        <div class="music-grid">
+            {% for song in recommended_songs %}
+            <div class="music-card">
+                <div class="music-cover">
+                    <img src="{{ song.cover }}" alt="{{ song.title }}">
+                    <div class="music-info">
+                        <h4>{{ song.title }}</h4>
+                        <p>{{ song.artist }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- 热门歌单 -->
+    <section class="recommend-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-fire"></i> 热门歌单
+            </h2>
+            <a href="{% url 'playlist_list' %}" class="more-link">
+                更多 <i class="fas fa-chevron-right"></i>
+            </a>
+        </div>
+        <div class="playlist-grid">
+            {% for playlist in hot_playlists %}
+            <div class="playlist-card">
+                <div class="playlist-cover">
+                    <img src="{{ playlist.cover }}" alt="{{ playlist.title }}">
+                    <div class="playlist-info">
+                        <h4>{{ playlist.title }}</h4>
+                        <p><i class="fas fa-play-circle"></i> {{ playlist.play_count }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- 热门歌手 -->
+    <section class="recommend-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-star"></i> 热门歌手
+            </h2>
+            <a href="{% url 'artist_list' %}" class="more-link">
+                更多 <i class="fas fa-chevron-right"></i>
+            </a>
+        </div>
+        <div class="artist-grid">
+            {% for artist in hot_artists %}
+            <div class="artist-card">
+                <img src="{{ artist.avatar }}" class="artist-avatar" alt="{{ artist.name }}">
+                <h4>{{ artist.name }}</h4>
+                <p>{{ artist.songs_count }}首歌曲</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %} 
